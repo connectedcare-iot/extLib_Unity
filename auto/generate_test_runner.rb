@@ -42,7 +42,8 @@ class UnityTestRunnerGenerator
       main_export_decl: '',
       cmdline_args: false,
       omit_begin_end: false,
-      use_param_tests: false
+      use_param_tests: false,
+      use_testfile_includes: true
     }
   end
 
@@ -84,8 +85,11 @@ class UnityTestRunnerGenerator
 
   def generate(input_file, output_file, tests, used_mocks, testfile_includes)
     File.open(output_file, 'w') do |output|
-      #create_header(output, used_mocks, testfile_includes)
-      create_header(output, used_mocks)
+      if @options[:use_testfile_includes] 
+        create_header(output, used_mocks, testfile_includes)
+      elsif !@options[:use_testfile_includes] 
+        create_header(output, used_mocks)
+      end
       create_externs(output, tests, used_mocks)
       create_mock_management(output, used_mocks)
       create_setup(output)
